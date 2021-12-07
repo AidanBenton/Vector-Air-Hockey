@@ -11,45 +11,47 @@ using System.Windows;
 
 namespace Vector_Air_Hockey
 {
-
     public partial class Form1 : Form
-    {
-        
-      
+    { 
         SolidBrush blueBrush = new SolidBrush(Color.Blue);
         SolidBrush redBrush = new SolidBrush(Color.Red);
         SolidBrush blackBrush = new SolidBrush(Color.White);
         Pen drawPen = new Pen(Color.White, 3);
         //Physics variables
-        double time = 2;
-        double Fax;
-        double Fay; 
-        double xFnet;
-        double yFnet;
-        double xA;
-        double yA;
-        int XV1;
-        int YV1;
+        float time = 1;
+        float Fax;
+        float Fay; 
+        float xFnet;
+        float yFnet;
+        float xA;
+        float yA;
+        float XV1;
+        float YV1;
         //Input Buttons
         bool wDown;
         bool sDown;
         bool aDown;
         bool dDown;
+        bool upArrow;
+        bool downArrow;
+        bool leftArrow;
+        bool rightArrow;
         //player information
         double Cos;
         double Sin; 
         int player1PosX;
         int player1PosY;
-        double player1Distance;
-        double player1XDistance;
-        double player1YDistance;
+        float player1Distance;
+        float player1XDistance;
+        float player1YDistance;
         int player1SpeedX = 2;
         int player1SpeedY = 2;
-        Vector ballPos = new Vector(200,200);
+        Vector position = new Vector(100, 100);
+        Vector Acceleration = new Vector(); 
         Vector velocity = new Vector(); 
         public Form1()
         {
-           
+            Vector ballAcceleration = new Vector(xA, yA);
             InitializeComponent();
         }
         private void Form1_KeyUp(object sender, KeyEventArgs e)
@@ -68,6 +70,21 @@ namespace Vector_Air_Hockey
                     break;
                 case Keys.D:
                     dDown = false;
+                    break;
+            }
+            switch (e.KeyCode)
+            {
+                case Keys.Up:
+                    upArrow = false;
+                    break;
+                case Keys.Down:
+                    downArrow = false;
+                    break;
+                case Keys.Left:
+                    aDown = false;
+                    break;
+                case Keys.Right:
+                    rightArrow = false;
                     break;
             }
         }
@@ -89,6 +106,21 @@ namespace Vector_Air_Hockey
                     dDown = true;
                     break;
             }
+            switch (e.KeyCode)
+            {
+                case Keys.Up:
+                    upArrow = true;
+                    break;
+                case Keys.Down:
+                    downArrow = true;
+                    break;
+                case Keys.Left:
+                    aDown = true;
+                    break;
+                case Keys.Right:
+                    rightArrow = true;
+                    break;
+            }
         }
         private void gameTimer_Tick(object sender, EventArgs e)
         {
@@ -96,7 +128,6 @@ namespace Vector_Air_Hockey
             {
                 player1PosY -= player1SpeedY;
             }
-
             if (sDown == true && player1PosY < this.Height - 40)
             {
                 player1PosY += player1SpeedY;
@@ -110,9 +141,9 @@ namespace Vector_Air_Hockey
             {
                 player1PosX += player1SpeedX;
             }
-            player1XDistance = (player1PosX + 20) - (ballPos.X + 10);
-            player1YDistance = (player1PosY + 20) - (ballPos.Y + 10);
-            player1Distance = Math.Sqrt(Math.Pow(player1XDistance, 2) + Math.Pow(player1YDistance, 2)); 
+            player1XDistance = Convert.ToSingle((player1PosX + 20) - (position.X + 10));
+            player1YDistance = Convert.ToSingle((player1PosY + 20) - (position.Y + 10));
+            player1Distance = Convert.ToSingle(Math.Sqrt(Math.Pow(player1XDistance, 2) + Math.Pow(player1YDistance, 2))); 
             if (player1Distance <= 30)
             {
                 collisionCalculation(player1XDistance, player1YDistance, player1Distance);  
@@ -124,21 +155,23 @@ namespace Vector_Air_Hockey
             //all weight is represented in grams
 
             //Fnet = FA x (mass x coefficiant of friction) 
-            xFnet = Fax - (20 * 0.015);
+            xFnet = Fax;
             // A = fnet * mass
             xA = xFnet / 20;
-            //V1 = V2 + A(t)
             XV1 = Convert.ToInt32(xA * time);
 
             //Fnet = FA x (mass x coefficiant of friction) 
-            yFnet = Fay - (20 * 0.015);
+            yFnet = Fay;
             // A = fnet * mass
             yA = yFnet / 20;
             //V1 = V2 + A(t)
             YV1 = Convert.ToInt32(yA * time);
 
+                
+            
+
             velocity = new Vector(XV1, YV1);
-            ballPos = ballPos + velocity;
+            position += velocity;
 
             Refresh();
         }
@@ -146,7 +179,7 @@ namespace Vector_Air_Hockey
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
             e.Graphics.FillEllipse(blueBrush, player1PosX, player1PosY, 40, 40);
-            e.Graphics.FillEllipse(blackBrush, Convert.ToInt32(ballPos.X), Convert.ToInt32(ballPos.Y), 20, 20);
+            e.Graphics.FillEllipse(blackBrush, Convert.ToInt32(position.X), Convert.ToInt32(position.Y), 20, 20);
             e.Graphics.DrawLine(drawPen, 10, 45, 10, 415);
             e.Graphics.DrawArc(drawPen, 10, 30, 30, 30, 180, 90);
             e.Graphics.DrawArc(drawPen, 10, 399, 30, 30, 90, 90);
@@ -156,21 +189,31 @@ namespace Vector_Air_Hockey
             e.Graphics.DrawLine(drawPen, 25, 30, 100, 30);
         }
 
-        public void collisionCalculation(double xDistance, double yDistance, double playerDistance)
+        public void collisionCalculation(float xDistance, float yDistance, float playerDistance)
         {
 
-            if (player1PosY < ballPos.Y)
+            if (player1PosY < position.Y)
             {
                 // Cos = Cos-1(Adj/Hyp) 
-                Cos = Math.Acos(((xDistance + 20) - (ballPos.X + 10)) / playerDistance);
+                Cos = Math.Acos((xDistance / playerDistance));
                 // Fax = FA * Cos
-                Fax = 200 * Math.Cos(Cos);
+                Fax = Convert.ToSingle(-1*(100 * Math.Cos(Cos)));
 
                 // Sin = Sin-1(Opp/Hyp) 
-                Sin = Math.Asin(((xDistance + 20) - (ballPos.X + 10)) / playerDistance);
+                Sin = Math.Asin((yDistance / playerDistance));
                 // Fay = FA * Sin
-                Fay = 200 * Math.Sin(Sin);
+                Fay = Convert.ToSingle(-1*(100 * Math.Sin(Sin)));
             }
+        }
+        struct pball
+        {
+            float px, py;
+            float vx, vy;
+            float ax, ay;
+            float radius;
+             
+            
+            int id; 
         }
     }
 }
