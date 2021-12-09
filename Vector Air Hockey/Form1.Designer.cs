@@ -93,6 +93,7 @@ namespace Vector_Air_Hockey
             this.Controls.Add(this.VX1Label);
             this.Controls.Add(this.aXLabel);
             this.Controls.Add(this.faxLabel);
+            this.DoubleBuffered = true;
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";

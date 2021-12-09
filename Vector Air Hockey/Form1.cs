@@ -33,6 +33,7 @@ namespace Vector_Air_Hockey
         float yA;
         float XV1;
         float YV1;
+        int runTime; 
         //Input Buttons
         bool wDown;
         bool sDown;
@@ -52,6 +53,7 @@ namespace Vector_Air_Hockey
         float player1YDistance;
         int player1SpeedX = 2;
         int player1SpeedY = 2;
+        
         Vector position = new Vector(100, 100);
         Vector Acceleration = new Vector();
         Vector velocity = new Vector();
@@ -168,31 +170,7 @@ namespace Vector_Air_Hockey
             if (player1Distance <= 30)
             {
                 collisionCalculation(player1XDistance, player1YDistance, player1Distance);
-            }
-            else
-            {
-                    if (Fax < 0)
-                    {
-                        Fax++;
-                    }
-                    else if (Fax > 0)
-                    {
-                        Fax--;
-                    }
-
-                    if (Fay < 0)
-                    {
-                        Fay++;
-                    }
-                    else if (Fay > 0)
-                    {
-                        Fay--;
-                    }
-            }
-
-                //all weight is represented in grams
-
-                //Fnet = FA x (mass x coefficiant of friction) 
+                 //Fnet = FA x (mass x coefficiant of friction) 
                 xFnet = Fax;
                 // A = fnet * mass
                 xA = xFnet / 20;
@@ -204,6 +182,32 @@ namespace Vector_Air_Hockey
                 yA = yFnet / 20;
                 //V1 = V2 + A(t)
                 YV1 = Convert.ToInt32(yA * time);
+            }
+            runTime++;
+            if (runTime % 8 == 0)
+            {
+                if (XV1 < 0)
+                {
+                    XV1++;
+                }
+                else if (XV1 > 0)
+                {
+                    XV1--;
+                }
+
+                if (YV1 < 0)
+                {
+                    YV1++;
+                }
+                else if (YV1 > 0)
+                {
+                    YV1--;
+                }
+            }
+
+                //all weight is represented in grams
+
+               
             aXLabel.Text = $"{XV1}";
 
             //ball collsion with walls
@@ -282,12 +286,12 @@ namespace Vector_Air_Hockey
                 // Cos = Cos-1(Adj/Hyp) 
                 Cos = Math.Acos((xDistance / playerDistance));
                 // Fax = FA * Cos
-                Fax = Convert.ToSingle(-1 * (150 * Math.Cos(Cos)));
+                Fax = Convert.ToSingle(-1 * (250 * Math.Cos(Cos)));
 
                 // Sin = Sin-1(Opp/Hyp) 
                 Sin = Math.Asin((yDistance / playerDistance));
                 // Fay = FA * Sin
-                Fay = Convert.ToSingle(-1 * (150 * Math.Sin(Sin)));
+                Fay = Convert.ToSingle(-1 * (250 * Math.Sin(Sin)));
             }
 
      
