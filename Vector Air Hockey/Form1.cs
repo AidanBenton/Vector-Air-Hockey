@@ -51,8 +51,8 @@ namespace Vector_Air_Hockey
         float player1Distance;
         float player1XDistance;
         float player1YDistance;
-        int player1SpeedX = 2;
-        int player1SpeedY = 2;
+        int player1SpeedX = 4;
+        int player1SpeedY = 4;
         
         Vector position = new Vector(100, 100);
         Vector Acceleration = new Vector();
@@ -220,25 +220,25 @@ namespace Vector_Air_Hockey
                     position.X = 11;
                 }
             }
-            if (position.X + 10 >= 220)
+            if (position.X + 10 >= 223)
             {
                 if (XV1 == Math.Abs(XV1))
                 {
                     XV1 *= -1;
                 }
             }
-            if (position.Y <= 50 && position.X <= 83 && position.X >= 162)
+            if (position.Y <= 50 && position.X <=  83 - 10 || position.Y <= 50 && position.X >= 163)
             {
                 if (YV1 != Math.Abs(YV1))
                 {
                     YV1 *= -1;
                 }
             }
-            if (position.Y >= 451 && position.X <= 83 && position.X >= 162)
+            if (position.Y >= 451 - 10 && position.X <=  83 - 10 || position.Y >= 451 - 10 && position.X >= 163)
             {
                 if (YV1 == Math.Abs(YV1))
                 {
-                    YV1 = 0;
+                    YV1 *= -1;
                 }
             }
 
@@ -276,9 +276,12 @@ namespace Vector_Air_Hockey
                 //top lines 
                 e.Graphics.DrawLine(drawPen, 15, 50, 83, 50);
                 e.Graphics.DrawLine(drawPen, 235, 50, 162, 50);
+                e.Graphics.DrawLine(drawPen, 83, 50, 83, 0); 
                 //bottom lines 
                 e.Graphics.DrawLine(drawPen, 15, 461, 83, 461);
                 e.Graphics.DrawLine(drawPen, 235, 461, 162, 461);
+                //middle line 
+                e.Graphics.DrawLine(drawPen, 10, 250, 237, 250); 
         }
 
             public void collisionCalculation(float xDistance, float yDistance, float playerDistance)
@@ -286,12 +289,12 @@ namespace Vector_Air_Hockey
                 // Cos = Cos-1(Adj/Hyp) 
                 Cos = Math.Acos((xDistance / playerDistance));
                 // Fax = FA * Cos
-                Fax = Convert.ToSingle(-1 * (250 * Math.Cos(Cos)));
+                Fax = Convert.ToSingle(-1 * (300 * Math.Cos(Cos)));
 
                 // Sin = Sin-1(Opp/Hyp) 
                 Sin = Math.Asin((yDistance / playerDistance));
                 // Fay = FA * Sin
-                Fay = Convert.ToSingle(-1 * (250 * Math.Sin(Sin)));
+                Fay = Convert.ToSingle(-1 * (300 * Math.Sin(Sin)));
             }
 
      
