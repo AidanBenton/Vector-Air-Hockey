@@ -213,7 +213,7 @@ namespace Vector_Air_Hockey
                 if (XV1 != Math.Abs(XV1))
                 {
                     XV1 = XV1 * -1;
-                    position.X += 100;
+                    position.X = 11;
                 }
             }
             if (position.X + 10 >= 220)
@@ -225,14 +225,14 @@ namespace Vector_Air_Hockey
             }
             if (position.Y <= 50 && position.X <= 83 && position.X >= 162)
             {
-                if (XV1 != Math.Abs(XV1))
+                if (YV1 != Math.Abs(YV1))
                 {
                     YV1 *= -1;
                 }
             }
-            if (position.Y >= 451/* && position.X <= 83 && position.X >= 162*/)
+            if (position.Y >= 451 && position.X <= 83 && position.X >= 162)
             {
-                if (XV1 == Math.Abs(XV1))
+                if (YV1 == Math.Abs(YV1))
                 {
                     YV1 = 0;
                 }
@@ -282,12 +282,12 @@ namespace Vector_Air_Hockey
                 // Cos = Cos-1(Adj/Hyp) 
                 Cos = Math.Acos((xDistance / playerDistance));
                 // Fax = FA * Cos
-                Fax = Convert.ToSingle(-1 * (250 * Math.Cos(Cos)));
+                Fax = Convert.ToSingle(-1 * (150 * Math.Cos(Cos)));
 
                 // Sin = Sin-1(Opp/Hyp) 
                 Sin = Math.Asin((yDistance / playerDistance));
                 // Fay = FA * Sin
-                Fay = Convert.ToSingle(-1 * (250 * Math.Sin(Sin)));
+                Fay = Convert.ToSingle(-1 * (150 * Math.Sin(Sin)));
             }
 
      
