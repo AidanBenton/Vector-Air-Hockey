@@ -34,6 +34,7 @@ namespace Vector_Air_Hockey
             this.faxLabel = new System.Windows.Forms.Label();
             this.aXLabel = new System.Windows.Forms.Label();
             this.VX1Label = new System.Windows.Forms.Label();
+            this.collsionLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // gameTimer
@@ -72,16 +73,28 @@ namespace Vector_Air_Hockey
             this.VX1Label.TabIndex = 3;
             this.VX1Label.Text = "Collision: False";
             // 
+            // collsionLabel
+            // 
+            this.collsionLabel.AutoSize = true;
+            this.collsionLabel.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.collsionLabel.Location = new System.Drawing.Point(12, 396);
+            this.collsionLabel.Name = "collsionLabel";
+            this.collsionLabel.Size = new System.Drawing.Size(76, 13);
+            this.collsionLabel.TabIndex = 4;
+            this.collsionLabel.Text = "Collision: False";
+            // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.ClientSize = new System.Drawing.Size(234, 461);
+            this.Controls.Add(this.collsionLabel);
             this.Controls.Add(this.VX1Label);
             this.Controls.Add(this.aXLabel);
             this.Controls.Add(this.faxLabel);
             this.Name = "Form1";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form1_Paint);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
@@ -97,6 +110,7 @@ namespace Vector_Air_Hockey
         private System.Windows.Forms.Label faxLabel;
         private System.Windows.Forms.Label aXLabel;
         private System.Windows.Forms.Label VX1Label;
+        private System.Windows.Forms.Label collsionLabel;
     }
 }
 
