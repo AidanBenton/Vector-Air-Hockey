@@ -14,12 +14,15 @@ namespace Vector_Air_Hockey
 {
     public partial class Form1 : Form
     {
+        Rectangle goalOne = new Rectangle(83, 30, 163, 30);
+        Rectangle goalTwo = new Rectangle(83, 470, 163, 470);
         int pOneScore;
-        int pTwoScore; 
-        bool mouseHover = false; 
+        int pTwoScore;
+        bool mouseHover = false;
         SolidBrush blueBrush = new SolidBrush(Color.Blue);
         SolidBrush redBrush = new SolidBrush(Color.Red);
-        SolidBrush blackBrush = new SolidBrush(Color.White);
+        SolidBrush whiteBrush = new SolidBrush(Color.White);
+        SolidBrush blackBrush = new SolidBrush(Color.Black);
         Pen drawPen = new Pen(Color.White, 3);
         Pen greyPen = new Pen(Color.Gray, 3);
         //Physics variables/stopwatch
@@ -36,7 +39,7 @@ namespace Vector_Air_Hockey
         float YV1;
         double Cos;
         double Sin;
-        int runTime; 
+        int runTime;
         //Input Buttons
         bool wDown;
         bool sDown;
@@ -47,7 +50,6 @@ namespace Vector_Air_Hockey
         bool leftArrow;
         bool rightArrow;
         //player information
-
         int player1PosX;
         int player1PosY;
         float player1Distance;
@@ -60,7 +62,8 @@ namespace Vector_Air_Hockey
         float player2YDistance;
         int playerSpeedX = 4;
         int playerSpeedY = 4;
-        
+        //goal information
+        bool goalHasBeenScored = false; 
         Vector position = new Vector(100, 100);
         Vector Acceleration = new Vector();
         Vector velocity = new Vector();
@@ -75,7 +78,10 @@ namespace Vector_Air_Hockey
 
             player2PosX = 125 - 20;
             player2PosY = 431 - 40;
-            InitializeComponent(); 
+
+            //backgroundLabelTop.Size = new System.Drawing.Size(250, 0);
+            //backgroundLabelTop.Size = new System.Drawing.Size(250, 0);
+            InitializeComponent();
         }
         private void Form1_KeyUp(object sender, KeyEventArgs e)
         {
@@ -94,9 +100,6 @@ namespace Vector_Air_Hockey
                 case Keys.D:
                     dDown = false;
                     break;
-            }
-            switch (e.KeyCode)
-            {
                 case Keys.Up:
                     upArrow = false;
                     break;
@@ -104,7 +107,7 @@ namespace Vector_Air_Hockey
                     downArrow = false;
                     break;
                 case Keys.Left:
-                    aDown = false;
+                    leftArrow = false;
                     break;
                 case Keys.Right:
                     rightArrow = false;
@@ -113,7 +116,7 @@ namespace Vector_Air_Hockey
         }
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
-            faxLabel.Text = $"{player1PosX}"; 
+            faxLabel.Text = $"{player1PosX}";
             //keyup inputs
             switch (e.KeyCode)
             {
@@ -129,9 +132,6 @@ namespace Vector_Air_Hockey
                 case Keys.D:
                     dDown = true;
                     break;
-            }
-            switch (e.KeyCode)
-            {
                 case Keys.Up:
                     upArrow = true;
                     break;
@@ -149,7 +149,7 @@ namespace Vector_Air_Hockey
         private void gameTimer_Tick(object sender, EventArgs e)
         {
 
-          
+
 
             //ball stuck with walls 
             if (position.X == 10)
@@ -166,7 +166,7 @@ namespace Vector_Air_Hockey
             {
                 player1PosY -= playerSpeedY;
             }
-            if (sDown == true && player1PosY < 451 - 35)
+            if (sDown == true && player1PosY + 42 < 250)
             {
                 player1PosY += playerSpeedY;
             }
@@ -179,7 +179,7 @@ namespace Vector_Air_Hockey
                 player1PosX += playerSpeedX;
             }
 
-            if (upArrow == true && player2PosY > 50)
+            if (upArrow == true && player2PosY - 2 > 250)
             {
                 player2PosY -= playerSpeedY;
             }
@@ -196,14 +196,38 @@ namespace Vector_Air_Hockey
                 player2PosX += playerSpeedX;
             }
 
+            //player one's distance to the ball
             player1XDistance = Convert.ToSingle((player1PosX + 20) - (position.X + 10));
             player1YDistance = Convert.ToSingle((player1PosY + 20) - (position.Y + 10));
             player1Distance = Convert.ToSingle(Math.Sqrt(Math.Pow(player1XDistance, 2) + Math.Pow(player1YDistance, 2)));
+
+            //player two's distance to the ball
+            player2XDistance = Convert.ToSingle((player2PosX + 20) - (position.X + 10));
+            player2YDistance = Convert.ToSingle((player2PosY + 20) - (position.Y + 10));
+            player2Distance = Convert.ToSingle(Math.Sqrt(Math.Pow(player2XDistance, 2) + Math.Pow(player2YDistance, 2)));
+
+            if (player2Distance <= 30)
+            {
+                collisionCalculation(player2XDistance, player2YDistance, player2Distance);
+                //Fnet = FA x (mass x coefficiant of friction) 
+                xFnet = Fax;
+                // A = fnet * mass
+                xA = xFnet / 20;
+                XV1 = Convert.ToInt32(xA * time);
+
+                //Fnet = FA x (mass x coefficiant of friction) 
+                yFnet = Fay;
+                // A = fnet * mass
+                yA = yFnet / 20;
+                //V1 = V2 + A(t)
+                YV1 = Convert.ToInt32(yA * time);
+            }
+
             //Angle and friction calculations
             if (player1Distance <= 30)
             {
                 collisionCalculation(player1XDistance, player1YDistance, player1Distance);
-                 //Fnet = FA x (mass x coefficiant of friction) 
+                //Fnet = FA x (mass x coefficiant of friction) 
                 xFnet = Fax;
                 // A = fnet * mass
                 xA = xFnet / 20;
@@ -238,15 +262,15 @@ namespace Vector_Air_Hockey
                 }
             }
 
-                //all weight is represented in grams
+            //all weight is represented in grams
 
-               
+
             aXLabel.Text = $"{XV1}";
 
             //ball collsion with walls
-            if (position.X -3  <= 10)
+            if (position.X - 3 <= 10)
             {
-
+                //collsion with left wall
                 if (XV1 != Math.Abs(XV1))
                 {
                     XV1 = XV1 * -1;
@@ -255,60 +279,84 @@ namespace Vector_Air_Hockey
             }
             if (position.X + 10 >= 223)
             {
+                //collsion wil right wall
                 if (XV1 == Math.Abs(XV1))
                 {
                     XV1 *= -1;
+                    position.X = 223 - 20;
                 }
             }
-            if (position.Y <= 50 && position.X <=  83 - 10 || position.Y <= 50 && position.X >= 163)
+            if (position.Y <= 50 && position.X + 20 <= 83 || position.Y + 20 <= 50 && position.X + 20 >= 163)
             {
+                //collision with top wall
                 if (YV1 != Math.Abs(YV1))
                 {
                     YV1 *= -1;
+                    position.Y = 50;
                 }
             }
-            if (position.Y >= 451 - 10 && position.X <=  83 - 10 || position.Y >= 451 - 10 && position.X >= 163)
+            if (position.Y + 20 >= 451 && position.X + 20 <= 83 || position.Y + 20 >= 451 && position.X + 20 >= 163)
             {
+                //collision bottom wall
                 if (YV1 == Math.Abs(YV1))
                 {
                     YV1 *= -1;
+                    position.Y = 451 - 20;
                 }
-            }
-
-            //Ball scoring 
-            if (position.Y == 35)
-            {
-                pTwoScore++; 
-            }
-
-            if (position.Y == 466)
-            {
-                pOneScore++; 
             }
 
 
             faxLabel.Text = $"{XV1}";
             velocity = new Vector(XV1, YV1);
             position += velocity;
-            if (position.Y + 20 == 50)
+            
+            if (position.Y + 10 < goalOne.Y)
             {
-                pTwoScore++; 
+                XV1 = 0;
+                YV1 = 0;
+                playerGoalSleep("TWO");
+                pTwoScore++;
+                position.X = 125 - 10;
+                position.Y = 250 - 10;
+
+                player1PosX = 125 - 20;
+                player1PosY = 80;
+
+                player2PosX = 125 - 20;
+                player2PosY = 431 - 40;
             }
-            if (position.Y == 50)
+            if (position.Y - 10 > goalTwo.Y)
             {
-                pOneScore--; 
+                XV1 = 0;
+                YV1 = 0;
+                playerGoalSleep("ONE");
+                pOneScore--;
+                position.X = 125 - 10;
+                position.Y = 250 - 10;
+
+                player1PosX = 125 - 20;
+                player1PosY = 80;
+
+                player2PosX = 125 - 20;
+                player2PosY = 431 - 40;
             }
 
-
+            faxLabel.Text = $"{position.X + 20}";
 
 
             Refresh();
+        }
+        private void Form1_Paint(object sender, PaintEventArgs e)
+        {
+            if (goalHasBeenScored == true)
+            {
+                e.Graphics.Clear(Color.Black);
             }
-            private void Form1_Paint(object sender, PaintEventArgs e)
+            else
             {
                 e.Graphics.FillEllipse(blueBrush, player1PosX, player1PosY, 40, 40);
                 e.Graphics.FillEllipse(redBrush, player2PosX, player2PosY, 40, 40);
-                e.Graphics.FillEllipse(blackBrush, Convert.ToInt32(position.X), Convert.ToInt32(position.Y), 20, 20);
+                e.Graphics.FillEllipse(whiteBrush, Convert.ToInt32(position.X), Convert.ToInt32(position.Y), 20, 20);
                 //rightside line 
                 e.Graphics.DrawLine(drawPen, 10, 55, 10, 456);
                 //rightside arcs 
@@ -335,22 +383,56 @@ namespace Vector_Air_Hockey
                 e.Graphics.DrawLine(drawPen, 82, 491, 162, 491);
                 e.Graphics.DrawLine(greyPen, 82, 461, 162, 461);
                 //middle line 
-                e.Graphics.DrawLine(drawPen, 10, 250, 237, 250); 
+                e.Graphics.DrawLine(drawPen, 10, 250, 237, 250);
+            }
+           
         }
 
-            public void collisionCalculation(float xDistance, float yDistance, float playerDistance)
+        public void collisionCalculation(float xDistance, float yDistance, float playerDistance)
+        {
+
+            // Cos = Cos-1(Adj/Hyp) 
+            Cos = Math.Acos((xDistance / playerDistance));
+            // Fax = FA * Cos
+            Fax = Convert.ToSingle(-1 * (300 * Math.Cos(Cos)));
+
+            // Sin = Sin-1(Opp/Hyp) 
+            Sin = Math.Asin((yDistance / playerDistance));
+            // Fay = FA * Sin
+            Fay = Convert.ToSingle(-1 * (300 * Math.Sin(Sin)));
+        }
+
+        public async Task playerGoalSleep(string playerGoal)
+        {
+            
+            Graphics g = this.CreateGraphics();
+            Font drawFont = new Font("MS PGothic", 16, FontStyle.Bold);
+            SolidBrush drawBrush = new SolidBrush(Color.White);
+            gameTimer.Enabled = false; 
+                for (int i = 0; i < 500; i++)
+                {
+                    backgroundLabelTop.Size = new System.Drawing.Size(500, i);
+                    Refresh();
+                }
+            backgroundLabelTop.Visible = false;
+            goalHasBeenScored = true;
+            g.FillRectangle(blackBrush, 0, 0, 250, 500);
+            await Task.Delay(750);
+            playerScoredLabel.Text = $"PLAYER {playerGoal} SCORED";
+            await Task.Delay(750);
+            playerScoredLabel.Text = $"";
+            await Task.Delay(750);
+            playerScoredLabel.Text = $"PLAYER {playerGoal} SCORED";
+            await Task.Delay(750);
+            playerScoredLabel.Text = $"";
+            goalHasBeenScored = false;
+            backgroundLabelTop.Visible = true;
+            for (int i = 0; i < 500; i++)
             {
-                // Cos = Cos-1(Adj/Hyp) 
-                Cos = Math.Acos((xDistance / playerDistance));
-                // Fax = FA * Cos
-                Fax = Convert.ToSingle(-1 * (300 * Math.Cos(Cos)));
-
-                // Sin = Sin-1(Opp/Hyp) 
-                Sin = Math.Asin((yDistance / playerDistance));
-                // Fay = FA * Sin
-                Fay = Convert.ToSingle(-1 * (300 * Math.Sin(Sin)));
+                backgroundLabelTop.Size = new System.Drawing.Size(250, 500 - i);
+                Refresh();
             }
-
-     
+            gameTimer.Enabled = true;
+        }
     }
-    }
+}

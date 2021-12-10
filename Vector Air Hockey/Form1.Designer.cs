@@ -35,6 +35,10 @@ namespace Vector_Air_Hockey
             this.aXLabel = new System.Windows.Forms.Label();
             this.VX1Label = new System.Windows.Forms.Label();
             this.collsionLabel = new System.Windows.Forms.Label();
+            this.playerScoredLabel = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.backgroundLabelTop = new System.Windows.Forms.Label();
+            this.backgroundLabelBottom = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // gameTimer
@@ -83,20 +87,62 @@ namespace Vector_Air_Hockey
             this.collsionLabel.TabIndex = 4;
             this.collsionLabel.Text = "Collision: False";
             // 
+            // playerScoredLabel
+            // 
+            this.playerScoredLabel.AutoSize = true;
+            this.playerScoredLabel.BackColor = System.Drawing.Color.Transparent;
+            this.playerScoredLabel.Font = new System.Drawing.Font("MS UI Gothic", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.playerScoredLabel.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.playerScoredLabel.Location = new System.Drawing.Point(24, 241);
+            this.playerScoredLabel.Name = "playerScoredLabel";
+            this.playerScoredLabel.Size = new System.Drawing.Size(0, 19);
+            this.playerScoredLabel.TabIndex = 5;
+            this.playerScoredLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(0, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(35, 13);
+            this.label1.TabIndex = 6;
+            this.label1.Text = "label1";
+            // 
+            // backgroundLabelTop
+            // 
+            this.backgroundLabelTop.Location = new System.Drawing.Point(0, 0);
+            this.backgroundLabelTop.Name = "backgroundLabelTop";
+            this.backgroundLabelTop.Size = new System.Drawing.Size(250, 0);
+            this.backgroundLabelTop.TabIndex = 7;
+            this.backgroundLabelTop.Text = "label2";
+            // 
+            // backgroundLabelBottom
+            // 
+            this.backgroundLabelBottom.Location = new System.Drawing.Point(0, 500);
+            this.backgroundLabelBottom.Name = "backgroundLabelBottom";
+            this.backgroundLabelBottom.Size = new System.Drawing.Size(250, 0);
+            this.backgroundLabelBottom.TabIndex = 8;
+            this.backgroundLabelBottom.Text = "label2";
+            this.backgroundLabelBottom.Visible = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.ClientSize = new System.Drawing.Size(234, 461);
+            this.ClientSize = new System.Drawing.Size(250, 500);
+            this.Controls.Add(this.backgroundLabelBottom);
+            this.Controls.Add(this.backgroundLabelTop);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.playerScoredLabel);
             this.Controls.Add(this.collsionLabel);
             this.Controls.Add(this.VX1Label);
             this.Controls.Add(this.aXLabel);
             this.Controls.Add(this.faxLabel);
             this.DoubleBuffered = true;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Form1";
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form1_Paint);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyUp);
@@ -112,6 +158,10 @@ namespace Vector_Air_Hockey
         private System.Windows.Forms.Label aXLabel;
         private System.Windows.Forms.Label VX1Label;
         private System.Windows.Forms.Label collsionLabel;
+        private System.Windows.Forms.Label playerScoredLabel;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label backgroundLabelTop;
+        private System.Windows.Forms.Label backgroundLabelBottom;
     }
 }
 
