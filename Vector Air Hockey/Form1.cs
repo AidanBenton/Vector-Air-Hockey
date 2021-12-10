@@ -21,6 +21,7 @@ namespace Vector_Air_Hockey
         SolidBrush redBrush = new SolidBrush(Color.Red);
         SolidBrush blackBrush = new SolidBrush(Color.White);
         Pen drawPen = new Pen(Color.White, 3);
+        Pen greyPen = new Pen(Color.Gray, 3);
         //Physics variables/stopwatch
         bool collsion = false;
         Stopwatch MyWatch = new Stopwatch();
@@ -33,6 +34,8 @@ namespace Vector_Air_Hockey
         float yA;
         float XV1;
         float YV1;
+        double Cos;
+        double Sin;
         int runTime; 
         //Input Buttons
         bool wDown;
@@ -44,15 +47,19 @@ namespace Vector_Air_Hockey
         bool leftArrow;
         bool rightArrow;
         //player information
-        double Cos;
-        double Sin;
+
         int player1PosX;
         int player1PosY;
         float player1Distance;
         float player1XDistance;
         float player1YDistance;
-        int player1SpeedX = 4;
-        int player1SpeedY = 4;
+        int player2PosX;
+        int player2PosY;
+        float player2Distance;
+        float player2XDistance;
+        float player2YDistance;
+        int playerSpeedX = 4;
+        int playerSpeedY = 4;
         
         Vector position = new Vector(100, 100);
         Vector Acceleration = new Vector();
@@ -60,6 +67,14 @@ namespace Vector_Air_Hockey
         public Form1()
         {
             Vector ballAcceleration = new Vector(xA, yA);
+            position.X = 125 - 10;
+            position.Y = 250 - 10;
+
+            player1PosX = 125 - 20;
+            player1PosY = 80;
+
+            player2PosX = 125 - 20;
+            player2PosY = 431 - 40;
             InitializeComponent(); 
         }
         private void Form1_KeyUp(object sender, KeyEventArgs e)
@@ -124,7 +139,7 @@ namespace Vector_Air_Hockey
                     downArrow = true;
                     break;
                 case Keys.Left:
-                    aDown = true;
+                    leftArrow = true;
                     break;
                 case Keys.Right:
                     rightArrow = true;
@@ -149,20 +164,38 @@ namespace Vector_Air_Hockey
 
             if (wDown == true && player1PosY > 50)
             {
-                player1PosY -= player1SpeedY;
+                player1PosY -= playerSpeedY;
             }
             if (sDown == true && player1PosY < 451 - 35)
             {
-                player1PosY += player1SpeedY;
+                player1PosY += playerSpeedY;
             }
-            if (aDown == true && player1PosX > 0)
+            if (aDown == true && player1PosX > 10)
             {
-                player1PosX -= player1SpeedX;
+                player1PosX -= playerSpeedX;
             }
-            if (dDown == true && player1PosX < this.Width)
+            if (dDown == true && player1PosX < 237 - 40)
             {
-                player1PosX += player1SpeedX;
+                player1PosX += playerSpeedX;
             }
+
+            if (upArrow == true && player2PosY > 50)
+            {
+                player2PosY -= playerSpeedY;
+            }
+            if (downArrow == true && player2PosY < 451 - 35)
+            {
+                player2PosY += playerSpeedY;
+            }
+            if (leftArrow == true && player2PosX > 10)
+            {
+                player2PosX -= playerSpeedX;
+            }
+            if (rightArrow == true && player2PosX < 237 - 40)
+            {
+                player2PosX += playerSpeedX;
+            }
+
             player1XDistance = Convert.ToSingle((player1PosX + 20) - (position.X + 10));
             player1YDistance = Convert.ToSingle((player1PosY + 20) - (position.Y + 10));
             player1Distance = Convert.ToSingle(Math.Sqrt(Math.Pow(player1XDistance, 2) + Math.Pow(player1YDistance, 2)));
@@ -257,11 +290,24 @@ namespace Vector_Air_Hockey
             faxLabel.Text = $"{XV1}";
             velocity = new Vector(XV1, YV1);
             position += velocity;
+            if (position.Y + 20 == 50)
+            {
+                pTwoScore++; 
+            }
+            if (position.Y == 50)
+            {
+                pOneScore--; 
+            }
+
+
+
+
             Refresh();
             }
             private void Form1_Paint(object sender, PaintEventArgs e)
             {
                 e.Graphics.FillEllipse(blueBrush, player1PosX, player1PosY, 40, 40);
+                e.Graphics.FillEllipse(redBrush, player2PosX, player2PosY, 40, 40);
                 e.Graphics.FillEllipse(blackBrush, Convert.ToInt32(position.X), Convert.ToInt32(position.Y), 20, 20);
                 //rightside line 
                 e.Graphics.DrawLine(drawPen, 10, 55, 10, 456);
@@ -276,10 +322,18 @@ namespace Vector_Air_Hockey
                 //top lines 
                 e.Graphics.DrawLine(drawPen, 15, 50, 83, 50);
                 e.Graphics.DrawLine(drawPen, 235, 50, 162, 50);
-                e.Graphics.DrawLine(drawPen, 83, 50, 83, 0); 
+                e.Graphics.DrawLine(drawPen, 83, 50, 83, 20);
+                e.Graphics.DrawLine(drawPen, 162, 50, 162, 20);
+                e.Graphics.DrawLine(drawPen, 82, 20, 162, 20);
+                e.Graphics.DrawLine(greyPen, 82, 50, 162, 50);
+
                 //bottom lines 
                 e.Graphics.DrawLine(drawPen, 15, 461, 83, 461);
                 e.Graphics.DrawLine(drawPen, 235, 461, 162, 461);
+                e.Graphics.DrawLine(drawPen, 83, 461, 83, 491);
+                e.Graphics.DrawLine(drawPen, 162, 461, 162, 491);
+                e.Graphics.DrawLine(drawPen, 82, 491, 162, 491);
+                e.Graphics.DrawLine(greyPen, 82, 461, 162, 461);
                 //middle line 
                 e.Graphics.DrawLine(drawPen, 10, 250, 237, 250); 
         }
