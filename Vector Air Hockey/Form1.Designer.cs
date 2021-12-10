@@ -31,10 +31,6 @@ namespace Vector_Air_Hockey
         {
             this.components = new System.ComponentModel.Container();
             this.gameTimer = new System.Windows.Forms.Timer(this.components);
-            this.faxLabel = new System.Windows.Forms.Label();
-            this.aXLabel = new System.Windows.Forms.Label();
-            this.VX1Label = new System.Windows.Forms.Label();
-            this.collsionLabel = new System.Windows.Forms.Label();
             this.playerScoredLabel = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.backgroundLabelTop = new System.Windows.Forms.Label();
@@ -46,46 +42,6 @@ namespace Vector_Air_Hockey
             this.gameTimer.Enabled = true;
             this.gameTimer.Interval = 17;
             this.gameTimer.Tick += new System.EventHandler(this.gameTimer_Tick);
-            // 
-            // faxLabel
-            // 
-            this.faxLabel.AutoSize = true;
-            this.faxLabel.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.faxLabel.Location = new System.Drawing.Point(12, 357);
-            this.faxLabel.Name = "faxLabel";
-            this.faxLabel.Size = new System.Drawing.Size(76, 13);
-            this.faxLabel.TabIndex = 1;
-            this.faxLabel.Text = "Collision: False";
-            // 
-            // aXLabel
-            // 
-            this.aXLabel.AutoSize = true;
-            this.aXLabel.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.aXLabel.Location = new System.Drawing.Point(12, 370);
-            this.aXLabel.Name = "aXLabel";
-            this.aXLabel.Size = new System.Drawing.Size(76, 13);
-            this.aXLabel.TabIndex = 2;
-            this.aXLabel.Text = "Collision: False";
-            // 
-            // VX1Label
-            // 
-            this.VX1Label.AutoSize = true;
-            this.VX1Label.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.VX1Label.Location = new System.Drawing.Point(12, 383);
-            this.VX1Label.Name = "VX1Label";
-            this.VX1Label.Size = new System.Drawing.Size(76, 13);
-            this.VX1Label.TabIndex = 3;
-            this.VX1Label.Text = "Collision: False";
-            // 
-            // collsionLabel
-            // 
-            this.collsionLabel.AutoSize = true;
-            this.collsionLabel.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.collsionLabel.Location = new System.Drawing.Point(12, 396);
-            this.collsionLabel.Name = "collsionLabel";
-            this.collsionLabel.Size = new System.Drawing.Size(76, 13);
-            this.collsionLabel.TabIndex = 4;
-            this.collsionLabel.Text = "Collision: False";
             // 
             // playerScoredLabel
             // 
@@ -135,10 +91,6 @@ namespace Vector_Air_Hockey
             this.Controls.Add(this.backgroundLabelTop);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.playerScoredLabel);
-            this.Controls.Add(this.collsionLabel);
-            this.Controls.Add(this.VX1Label);
-            this.Controls.Add(this.aXLabel);
-            this.Controls.Add(this.faxLabel);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "Form1";
@@ -154,10 +106,6 @@ namespace Vector_Air_Hockey
         #endregion
 
         private System.Windows.Forms.Timer gameTimer;
-        private System.Windows.Forms.Label faxLabel;
-        private System.Windows.Forms.Label aXLabel;
-        private System.Windows.Forms.Label VX1Label;
-        private System.Windows.Forms.Label collsionLabel;
         private System.Windows.Forms.Label playerScoredLabel;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label backgroundLabelTop;

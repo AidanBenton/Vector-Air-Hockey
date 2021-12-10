@@ -14,8 +14,8 @@ namespace Vector_Air_Hockey
 {
     public partial class Form1 : Form
     {
-        Rectangle goalOne = new Rectangle(83, 30, 163, 30);
-        Rectangle goalTwo = new Rectangle(83, 470, 163, 470);
+        Rectangle goalOne = new Rectangle(83, 45, 163, 45);
+        Rectangle goalTwo = new Rectangle(83, 455, 163, 455);
         int pOneScore;
         int pTwoScore;
         bool mouseHover = false;
@@ -23,8 +23,13 @@ namespace Vector_Air_Hockey
         SolidBrush redBrush = new SolidBrush(Color.Red);
         SolidBrush whiteBrush = new SolidBrush(Color.White);
         SolidBrush blackBrush = new SolidBrush(Color.Black);
+        Font drawFont = new Font("MS UI Gothic", 16, FontStyle.Bold);
+        SolidBrush drawBrush = new SolidBrush(Color.White);
+
         Pen drawPen = new Pen(Color.White, 3);
         Pen greyPen = new Pen(Color.Gray, 3);
+        //Game states
+        string gameState = "running"; 
         //Physics variables/stopwatch
         bool collsion = false;
         Stopwatch MyWatch = new Stopwatch();
@@ -116,7 +121,6 @@ namespace Vector_Air_Hockey
         }
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
-            faxLabel.Text = $"{player1PosX}";
             //keyup inputs
             switch (e.KeyCode)
             {
@@ -265,7 +269,6 @@ namespace Vector_Air_Hockey
             //all weight is represented in grams
 
 
-            aXLabel.Text = $"{XV1}";
 
             //ball collsion with walls
             if (position.X - 3 <= 10)
@@ -286,7 +289,7 @@ namespace Vector_Air_Hockey
                     position.X = 223 - 20;
                 }
             }
-            if (position.Y <= 50 && position.X + 20 <= 83 || position.Y + 20 <= 50 && position.X + 20 >= 163)
+            if (position.Y <= 50 && position.X <= 83 || position.Y <= 50 && position.X + 20 >= 162)
             {
                 //collision with top wall
                 if (YV1 != Math.Abs(YV1))
@@ -295,7 +298,7 @@ namespace Vector_Air_Hockey
                     position.Y = 50;
                 }
             }
-            if (position.Y + 20 >= 451 && position.X + 20 <= 83 || position.Y + 20 >= 451 && position.X + 20 >= 163)
+            if (position.Y + 20 >= 451 && position.X + 20 <= 83 || position.Y + 20 >= 451 && position.X + 20 >= 162)
             {
                 //collision bottom wall
                 if (YV1 == Math.Abs(YV1))
@@ -306,7 +309,6 @@ namespace Vector_Air_Hockey
             }
 
 
-            faxLabel.Text = $"{XV1}";
             velocity = new Vector(XV1, YV1);
             position += velocity;
             
@@ -314,8 +316,8 @@ namespace Vector_Air_Hockey
             {
                 XV1 = 0;
                 YV1 = 0;
-                playerGoalSleep("TWO");
                 pTwoScore++;
+                playerGoalSleep("TWO", pTwoScore);
                 position.X = 125 - 10;
                 position.Y = 250 - 10;
 
@@ -325,12 +327,12 @@ namespace Vector_Air_Hockey
                 player2PosX = 125 - 20;
                 player2PosY = 431 - 40;
             }
-            if (position.Y - 10 > goalTwo.Y)
+            if (position.Y > goalTwo.Y)
             {
                 XV1 = 0;
                 YV1 = 0;
-                playerGoalSleep("ONE");
-                pOneScore--;
+                pOneScore++;
+                playerGoalSleep("ONE", pOneScore);
                 position.X = 125 - 10;
                 position.Y = 250 - 10;
 
@@ -340,20 +342,20 @@ namespace Vector_Air_Hockey
                 player2PosX = 125 - 20;
                 player2PosY = 431 - 40;
             }
-
-            faxLabel.Text = $"{position.X + 20}";
 
 
             Refresh();
         }
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
-            if (goalHasBeenScored == true)
+            if (gameState == "stalled")
             {
                 e.Graphics.Clear(Color.Black);
             }
-            else
+            else if (gameState == "running")
             {
+                e.Graphics.DrawString($"{pOneScore}", drawFont, drawBrush, 218, 228);
+                e.Graphics.DrawString($"{pTwoScore}", drawFont, drawBrush, 218, 253);
                 e.Graphics.FillEllipse(blueBrush, player1PosX, player1PosY, 40, 40);
                 e.Graphics.FillEllipse(redBrush, player2PosX, player2PosY, 40, 40);
                 e.Graphics.FillEllipse(whiteBrush, Convert.ToInt32(position.X), Convert.ToInt32(position.Y), 20, 20);
@@ -402,37 +404,67 @@ namespace Vector_Air_Hockey
             Fay = Convert.ToSingle(-1 * (300 * Math.Sin(Sin)));
         }
 
-        public async Task playerGoalSleep(string playerGoal)
+        public async Task playerGoalSleep(string playerGoal, int playerScore)
         {
-            
+            //Player Scored procedure 
             Graphics g = this.CreateGraphics();
             Font drawFont = new Font("MS PGothic", 16, FontStyle.Bold);
             SolidBrush drawBrush = new SolidBrush(Color.White);
-            gameTimer.Enabled = false; 
+            gameTimer.Enabled = false;
                 for (int i = 0; i < 500; i++)
                 {
                     backgroundLabelTop.Size = new System.Drawing.Size(500, i);
                     Refresh();
                 }
+           
             backgroundLabelTop.Visible = false;
-            goalHasBeenScored = true;
-            g.FillRectangle(blackBrush, 0, 0, 250, 500);
-            await Task.Delay(750);
-            playerScoredLabel.Text = $"PLAYER {playerGoal} SCORED";
-            await Task.Delay(750);
-            playerScoredLabel.Text = $"";
-            await Task.Delay(750);
-            playerScoredLabel.Text = $"PLAYER {playerGoal} SCORED";
-            await Task.Delay(750);
-            playerScoredLabel.Text = $"";
-            goalHasBeenScored = false;
-            backgroundLabelTop.Visible = true;
-            for (int i = 0; i < 500; i++)
+            gameState = "stalled";
+            //checks if player has won
+            if (playerScore == 3)
             {
-                backgroundLabelTop.Size = new System.Drawing.Size(250, 500 - i);
-                Refresh();
+                gameTimer.Enabled = false;
+                gameOver(playerGoal);
             }
-            gameTimer.Enabled = true;
+            else
+            {
+                //displays various information on screen
+                g.FillRectangle(blackBrush, 0, 0, 250, 500);
+                await Task.Delay(750);
+                playerScoredLabel.Text = $"PLAYER {playerGoal} SCORED";
+                await Task.Delay(750);
+                playerScoredLabel.Text = $"";
+                await Task.Delay(750);
+                playerScoredLabel.Text = $"PLAYER {playerGoal} SCORED";
+                await Task.Delay(750);
+                playerScoredLabel.Text = $"";
+                gameState = "running";
+                backgroundLabelTop.Visible = true;
+                for (int i = 0; i < 500; i++)
+                {
+                    backgroundLabelTop.Size = new System.Drawing.Size(250, 500 - i);
+                    Refresh();
+                }
+                gameTimer.Enabled = true;
+            }
+        }
+
+        public async Task gameOver(string whoWon)
+        {
+            Graphics g = this.CreateGraphics();
+            Font drawFont = new Font("MS PGothic", 14, FontStyle.Regular);
+            SolidBrush drawBrush = new SolidBrush(Color.White);
+            //Game over procedure 
+            await Task.Delay(750);
+            playerScoredLabel.Location = new System.Drawing.Point(41, 241); 
+            playerScoredLabel.Text = $"PLAYER {whoWon} WINS";
+            await Task.Delay(750);
+            playerScoredLabel.Text = $"";
+            await Task.Delay(750);
+            playerScoredLabel.Text = $"PLAYER {whoWon} WINS";
+            await Task.Delay(750);
+            playerScoredLabel.Text = $"";
+            await Task.Delay(750);
+            g.DrawString($"PLAY AGAIN: ENTER \nEXIT: ESC", drawFont, drawBrush, 24, 241);  
         }
     }
 }
